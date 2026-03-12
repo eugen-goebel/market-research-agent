@@ -96,6 +96,22 @@ The report is saved to `./output/market_research_<company>_<date>.docx`.
 
 ---
 
+## Testing
+
+```bash
+# Run the full test suite (50 tests, no API key needed)
+python -m pytest tests/ -v
+```
+
+The test suite covers:
+- **Model validation** — Pydantic schemas, serialization, edge cases
+- **Mock data integrity** — ensures dry-run data is complete and valid
+- **Report generation** — DOCX output, section presence, table structure
+- **Agent logic** — web search tool usage, pause_turn handling, structured outputs
+- **CLI integration** — argument parsing, dry-run mode, error handling
+
+---
+
 ## Example Output
 
 Running `python main.py "SAP SE"` produces a ~8-page Word document:
@@ -118,6 +134,12 @@ market-research-agent/
 │   └── mock_data.py           # SAP SE sample data for --dry-run mode
 ├── utils/
 │   └── report_generator.py    # Professional DOCX generation
+├── tests/
+│   ├── test_models.py         # Pydantic model validation tests
+│   ├── test_mock_data.py      # Mock data integrity tests
+│   ├── test_report_generator.py  # DOCX generation tests
+│   ├── test_agents.py         # Agent logic tests (mocked API)
+│   └── test_cli.py            # CLI integration tests
 ├── output/                    # Generated reports (git-ignored)
 ├── requirements.txt
 └── .env.example

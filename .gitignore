@@ -8,3 +8,5 @@ build/
 .venv/
 venv/
 output/*.docx
+*.pyc
+.pytest_cache/
