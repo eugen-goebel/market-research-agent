@@ -68,7 +68,7 @@ Uses the [Anthropic Python SDK](https://github.com/anthropics/anthropic-sdk-pyth
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/market-research-agent.git
+git clone https://github.com/eugen-goebel/market-research-agent.git
 cd market-research-agent
 
 python -m venv .venv
