@@ -2,7 +2,12 @@
 
 > **Multi-agent AI system that generates professional market research reports — fully automated, from web search to formatted DOCX — in under 2 minutes.**
 
-Built with the [Anthropic Python SDK](https://github.com/anthropics/anthropic-sdk-python).
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![Tests](https://img.shields.io/badge/Tests-50_passed-brightgreen)
+![Anthropic SDK](https://img.shields.io/badge/Anthropic_SDK-0.49+-cc785c)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+Uses the [Anthropic Python SDK](https://github.com/anthropics/anthropic-sdk-python) for AI-powered research and analysis.
 
 ---
 
