@@ -2,6 +2,7 @@
 
 > **Multi-agent AI system that generates professional market research reports — fully automated, from web search to formatted DOCX — in under 2 minutes.**
 
+![CI](https://github.com/eugen-goebel/market-research-agent/actions/workflows/tests.yml/badge.svg)
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
 ![Tests](https://img.shields.io/badge/Tests-50_passed-brightgreen)
 ![Anthropic SDK](https://img.shields.io/badge/Anthropic_SDK-0.49+-cc785c)
