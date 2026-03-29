@@ -1,7 +1,6 @@
 """Tests for DOCX report generation."""
 
 import os
-import tempfile
 from docx import Document
 
 from agents.mock_data import SAP_MOCK
