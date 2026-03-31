@@ -11,6 +11,7 @@ import anthropic
 from .researcher import ResearchAgent
 from .analyst import AnalysisAgent
 from utils.report_generator import generate_docx_report
+from utils.pdf_report_generator import generate_pdf_report
 
 
 class MarketResearchOrchestrator:
@@ -22,9 +23,10 @@ class MarketResearchOrchestrator:
         output_dir: Directory where generated reports are saved
     """
 
-    def __init__(self, api_key: str | None = None, output_dir: str = "output"):
+    def __init__(self, api_key: str | None = None, output_dir: str = "output", report_format: str = "docx"):
         self.client = anthropic.Anthropic(api_key=api_key)
         self.output_dir = output_dir
+        self.report_format = report_format
         self._researcher = ResearchAgent(self.client)
         self._analyst = AnalysisAgent(self.client)
 
@@ -71,9 +73,11 @@ class MarketResearchOrchestrator:
         # ---------------------------------------------------------------
         # Phase 3: Report Generation
         # ---------------------------------------------------------------
-        print("[3/3]  ReportGenerator: Building DOCX report...\n")
+        fmt = self.report_format.upper()
+        print(f"[3/3]  ReportGenerator: Building {fmt} report...\n")
 
-        report_path = generate_docx_report(
+        generator = generate_pdf_report if self.report_format == "pdf" else generate_docx_report
+        report_path = generator(
             company=company,
             analysis=analysis,
             output_dir=self.output_dir,
