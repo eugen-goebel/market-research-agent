@@ -40,6 +40,12 @@ Examples:
         help="Directory to save the generated report (default: ./output)",
     )
     parser.add_argument(
+        "--format",
+        choices=["docx", "pdf"],
+        default="docx",
+        help="Output format for the report (default: docx)",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Skip API calls and generate a report using built-in SAP SE mock data",
@@ -57,16 +63,19 @@ def main():
     if args.dry_run:
         from agents.mock_data import SAP_MOCK
         from utils.report_generator import generate_docx_report
+        from utils.pdf_report_generator import generate_pdf_report
 
         company = args.company or "SAP SE"
+        fmt = args.format
         print(f"\n{'='*60}")
         print(f"  DRY RUN — using mock data for: {company}")
         print(f"{'='*60}\n")
         print("[1/3]  ResearchAgent:  skipped (dry-run)\n")
         print("[2/3]  AnalysisAgent:  skipped (dry-run)\n")
-        print("[3/3]  ReportGenerator: building DOCX...\n")
+        print(f"[3/3]  ReportGenerator: building {fmt.upper()}...\n")
 
-        report_path = generate_docx_report(
+        generator = generate_pdf_report if fmt == "pdf" else generate_docx_report
+        report_path = generator(
             company=company,
             analysis=SAP_MOCK,
             output_dir=args.output,
@@ -98,6 +107,7 @@ def main():
     orchestrator = MarketResearchOrchestrator(
         api_key=api_key,
         output_dir=args.output,
+        report_format=args.format,
     )
 
     try:
