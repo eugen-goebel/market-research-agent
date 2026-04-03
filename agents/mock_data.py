@@ -1,7 +1,7 @@
 """
 Mock data for --dry-run mode.
 
-Provides a realistic AnalysisResult for SAP SE so the full pipeline
+Provides realistic AnalysisResult instances so the full pipeline
 (report generation, DOCX output, styling) can be tested without an API key.
 """
 
@@ -115,3 +115,108 @@ SAP_MOCK = AnalysisResult(
         "Talent competition for AI and cloud engineers increasing R&D cost base",
     ],
 )
+
+
+ZALANDO_MOCK = AnalysisResult(
+    executive_summary=(
+        "Zalando SE is Europe's leading online fashion and lifestyle platform, operating "
+        "in 25 markets with over 50 million active customers. The company generated EUR 10.1 "
+        "billion in gross merchandise volume (GMV) in 2024, up 3.5% year-over-year. Zalando is "
+        "transitioning from a pure retailer to a platform ecosystem model (ZEOS), enabling third-party "
+        "brands to leverage its logistics, payments, and customer base as a service."
+    ),
+    company_overview=(
+        "Zalando SE was founded in 2008 in Berlin by Robert Gentz and David Schneider, initially "
+        "as an online shoe retailer. Today it employs approximately 17,000 people and operates "
+        "across 25 European markets. Its product portfolio spans fashion, beauty, accessories, "
+        "and lifestyle categories, offering over 6,000 brands. Zalando operates its own logistics "
+        "network with 12 fulfillment centers across Europe, plus a growing partner fulfillment program."
+    ),
+    market_position=(
+        "Zalando holds approximately 11% of the European online fashion market and is the largest "
+        "dedicated fashion e-commerce platform on the continent. Its competitive moat stems from "
+        "brand density (6,000+ brands), logistics infrastructure (same-day/next-day delivery in "
+        "key markets), and a strong mobile-first user experience. The ZEOS platform play aims to "
+        "position Zalando as the operating system for European fashion commerce."
+    ),
+    swot=SWOTAnalysis(
+        strengths=[
+            "Largest European online fashion platform with 50M+ active customers",
+            "Proprietary logistics network enabling fast delivery across 25 markets",
+            "Strong brand partnerships with 6,000+ fashion and lifestyle labels",
+            "Successful private label portfolio (Zign, YOURTURN) driving margin expansion",
+        ],
+        weaknesses=[
+            "Profitability remains thin — adjusted EBIT margin around 2-3% historically",
+            "Heavy dependence on promotional pricing and discounts to drive volume",
+            "Limited presence outside Europe — no meaningful US or Asia business",
+            "Returns rate of 40-50% in fashion significantly impacts unit economics",
+        ],
+        opportunities=[
+            "ZEOS platform-as-a-service model creating new high-margin revenue streams",
+            "Connected retail bridging online and offline for brand partners",
+            "Pre-owned fashion and recommerce segment growing 30%+ annually",
+            "AI-powered personalization improving conversion rates and reducing returns",
+        ],
+        threats=[
+            "Shein and Temu offering ultra-low-price fashion undercutting European players",
+            "Amazon Fashion investing heavily in European fashion infrastructure",
+            "About You (acquired by Zalando) integration risks and execution challenges",
+            "Consumer spending pressures from inflation reducing discretionary fashion spend",
+        ],
+    ),
+    top_competitors=[
+        Competitor(
+            name="ASOS plc",
+            overview="UK-based online fashion retailer targeting 20-somethings across Europe and globally.",
+            key_strength="Strong brand identity with younger demographics and own-brand margin advantage",
+            key_weakness="Struggling with profitability and operational restructuring since 2023",
+        ),
+        Competitor(
+            name="Amazon Fashion",
+            overview="Amazon's fashion vertical leveraging its massive logistics network and Prime membership base.",
+            key_strength="Unmatched logistics scale, Prime flywheel, and limitless category expansion",
+            key_weakness="Perceived as less curated and fashion-forward compared to dedicated platforms",
+        ),
+        Competitor(
+            name="About You",
+            overview="Hamburg-based fashion platform recently acquired by Zalando, previously a direct competitor.",
+            key_strength="Strong personalization engine and younger customer demographic in DACH region",
+            key_weakness="Persistent losses and now being integrated into Zalando ecosystem",
+        ),
+        Competitor(
+            name="H&M Group (Online)",
+            overview="Swedish fast-fashion giant with growing e-commerce operations across 60+ markets.",
+            key_strength="Massive physical store network complementing online presence with omnichannel strategy",
+            key_weakness="Brand perception challenges around sustainability and fast-fashion criticism",
+        ),
+    ],
+    key_trends=[
+        "Platform business models replacing pure retail — Zalando ZEOS, Farfetch, marketplace shifts",
+        "AI-driven personalization and virtual try-on reducing return rates by 15-20%",
+        "Recommerce and circular fashion growing as sustainability regulation tightens",
+        "Social commerce integration (TikTok Shop, Instagram Shopping) reshaping discovery",
+        "Quick commerce pressure — consumer expectations shifting to same-day delivery",
+        "Direct-to-consumer brands bypassing platforms with Shopify-powered storefronts",
+        "EU Digital Services Act and sustainability reporting mandates increasing compliance costs",
+    ],
+    investment_thesis=(
+        "Zalando's transition to a platform model via ZEOS has the potential to unlock significantly "
+        "higher margins than its traditional retail business. With 50M+ active customers and a dominant "
+        "logistics network, it is well positioned to become the Shopify of European fashion. The About You "
+        "acquisition adds scale, but integration execution remains the key near-term risk."
+    ),
+    risk_factors=[
+        "ZEOS platform adoption by brands slower than projected, limiting margin uplift",
+        "Shein/Temu price competition eroding market share in price-sensitive segments",
+        "About You integration consuming management attention and creating operational friction",
+        "Fashion returns rate (40-50%) structurally limiting profitability improvement",
+        "European consumer spending downturn reducing discretionary fashion purchases",
+    ],
+)
+
+
+COMPARISON_MOCKS = {
+    "SAP SE": SAP_MOCK,
+    "Zalando SE": ZALANDO_MOCK,
+}
