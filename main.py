@@ -35,6 +35,12 @@ Examples:
         help='Company name to research (e.g. "SAP SE", "Zalando", "Tesla")',
     )
     parser.add_argument(
+        "--compare",
+        nargs="+",
+        metavar="COMPANY",
+        help="Compare 2-3 companies side-by-side (e.g., --compare 'SAP SE' 'Zalando SE')",
+    )
+    parser.add_argument(
         "--output",
         default="output",
         help="Directory to save the generated report (default: ./output)",
@@ -57,41 +63,62 @@ def main():
     load_dotenv()
     args = parse_args()
 
+    if args.compare and len(args.compare) < 2:
+        print("Error: --compare requires at least 2 companies.")
+        sys.exit(1)
+    if args.compare and len(args.compare) > 3:
+        print("Error: --compare supports at most 3 companies.")
+        sys.exit(1)
+
     # -----------------------------------------------------------------------
     # Dry-run: generate report from mock data, no API key required
     # -----------------------------------------------------------------------
     if args.dry_run:
-        from agents.mock_data import SAP_MOCK
-        from utils.report_generator import generate_docx_report
-        from utils.pdf_report_generator import generate_pdf_report
+        from agents.mock_data import SAP_MOCK, COMPARISON_MOCKS
 
-        company = args.company or "SAP SE"
-        fmt = args.format
-        print(f"\n{'='*60}")
-        print(f"  DRY RUN — using mock data for: {company}")
-        print(f"{'='*60}\n")
-        print("[1/3]  ResearchAgent:  skipped (dry-run)\n")
-        print("[2/3]  AnalysisAgent:  skipped (dry-run)\n")
-        print(f"[3/3]  ReportGenerator: building {fmt.upper()}...\n")
+        if args.compare:
+            companies = args.compare
+            analyses = [COMPARISON_MOCKS.get(c, SAP_MOCK) for c in companies]
+            print(f"\n{'='*60}")
+            print(f"  DRY RUN — COMPETITOR COMPARISON")
+            print(f"  Companies: {', '.join(companies)}")
+            print(f"{'='*60}\n")
 
-        generator = generate_pdf_report if fmt == "pdf" else generate_docx_report
-        report_path = generator(
-            company=company,
-            analysis=SAP_MOCK,
-            output_dir=args.output,
-        )
-        print(f"       ✓ Report saved:\n       {report_path}\n")
+            orch = MarketResearchOrchestrator(output_dir=args.output)
+            report_path = orch.run_comparison_with_mock(companies, analyses)
+        else:
+            from utils.report_generator import generate_docx_report
+            from utils.pdf_report_generator import generate_pdf_report
+
+            company = args.company or "SAP SE"
+            fmt = args.format
+            print(f"\n{'='*60}")
+            print(f"  DRY RUN — using mock data for: {company}")
+            print(f"{'='*60}\n")
+            print("[1/3]  ResearchAgent:  skipped (dry-run)\n")
+            print("[2/3]  AnalysisAgent:  skipped (dry-run)\n")
+            print(f"[3/3]  ReportGenerator: building {fmt.upper()}...\n")
+
+            generator = generate_pdf_report if fmt == "pdf" else generate_docx_report
+            report_path = generator(
+                company=company,
+                analysis=SAP_MOCK,
+                output_dir=args.output,
+            )
+
+        print(f"       Report saved:\n       {report_path}\n")
         print(f"{'='*60}")
-        print("  Open the .docx file in Word or LibreOffice to preview.")
+        print("  Open the report in Word or LibreOffice to preview.")
         print(f"{'='*60}\n")
         return
 
     # -----------------------------------------------------------------------
     # Normal run: requires API key and company name
     # -----------------------------------------------------------------------
-    if not args.company:
+    if not args.company and not args.compare:
         print("Error: please provide a company name, e.g.:")
         print('  python3 main.py "SAP SE"')
+        print('  python3 main.py --compare "SAP SE" "Zalando SE"')
         print("  python3 main.py --dry-run   (no API key needed)")
         sys.exit(1)
 
@@ -111,7 +138,10 @@ def main():
     )
 
     try:
-        report_path = orchestrator.run(args.company)
+        if args.compare:
+            report_path = orchestrator.run_comparison(args.compare)
+        else:
+            report_path = orchestrator.run(args.company)
         print(f"\nReport: {report_path}")
     except KeyboardInterrupt:
         print("\n\nAborted by user.")
