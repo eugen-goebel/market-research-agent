@@ -9,9 +9,10 @@ Pipeline:
 
 import anthropic
 from .researcher import ResearchAgent
-from .analyst import AnalysisAgent
+from .analyst import AnalysisAgent, AnalysisResult
 from utils.report_generator import generate_docx_report
 from utils.pdf_report_generator import generate_pdf_report
+from utils.comparison_report import generate_comparison_report
 
 
 class MarketResearchOrchestrator:
@@ -88,4 +89,52 @@ class MarketResearchOrchestrator:
         print(f"  Done! Open the report in Microsoft Word or LibreOffice.")
         print(f"{'='*60}\n")
 
+        return report_path
+
+    def run_comparison(self, companies: list[str]) -> str:
+        """
+        Run the pipeline for multiple companies and generate a comparison report.
+
+        Args:
+            companies: List of 2-3 company names to compare
+
+        Returns:
+            Absolute path to the generated comparison DOCX report
+        """
+        analyses = []
+        total = len(companies)
+
+        for idx, company in enumerate(companies, 1):
+            print(f"\n{'='*60}")
+            print(f"  Analyzing {idx}/{total}: {company}")
+            print(f"{'='*60}\n")
+
+            print("[1/2]  ResearchAgent: Gathering web intelligence...")
+            research_brief = self._researcher.research(company)
+            word_count = len(research_brief.split())
+            print(f"       Research complete — {word_count} words gathered\n")
+
+            print("[2/2]  AnalysisAgent: Structuring analysis & SWOT...\n")
+            analysis = self._analyst.analyze(company, research_brief)
+            print(f"       Analysis complete")
+            print(f"         Competitors: {len(analysis.top_competitors)}")
+            print(f"         Trends: {len(analysis.key_trends)}\n")
+            analyses.append(analysis)
+
+        print(f"\n{'='*60}")
+        print(f"  Generating comparison report...")
+        print(f"{'='*60}\n")
+
+        report_path = generate_comparison_report(companies, analyses, self.output_dir)
+        print(f"       Report saved:\n       {report_path}\n")
+
+        return report_path
+
+    def run_comparison_with_mock(
+        self, companies: list[str], analyses: list[AnalysisResult],
+    ) -> str:
+        """Run comparison with pre-built analysis data (for --dry-run)."""
+        print(f"\n  Generating comparison report for: {', '.join(companies)}")
+        report_path = generate_comparison_report(companies, analyses, self.output_dir)
+        print(f"       Report saved:\n       {report_path}\n")
         return report_path
