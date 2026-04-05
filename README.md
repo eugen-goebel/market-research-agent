@@ -12,6 +12,21 @@ Uses the [Anthropic Python SDK](https://github.com/anthropics/anthropic-sdk-pyth
 
 ---
 
+## Sample Report
+
+Generated from the bundled SAP SE mock data via `python3 main.py --dry-run --format pdf`:
+
+**Cover Page** — report header with company name and generation date
+![Cover](docs/screenshots/01-cover.png)
+
+**Executive Summary, Company Overview & SWOT** — core findings plus a full SWOT matrix
+![Summary and SWOT](docs/screenshots/02-summary-swot.png)
+
+**Competitive Landscape, Trends & Risk Factors** — competitor comparison table, industry trends, strategic outlook
+![Competitive Landscape and Outlook](docs/screenshots/03-competitive-outlook.png)
+
+---
+
 ## Architecture
 
 ```
