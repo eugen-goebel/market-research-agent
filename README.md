@@ -191,7 +191,7 @@ market-research-agent/
 
 ## Requirements
 
-- Python 3.11+
+- Python 3.10+
 - Anthropic API key ([get one free](https://console.anthropic.com/))
 - Internet connection (for live web search)
 
