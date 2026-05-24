@@ -203,6 +203,66 @@ def _build_swot_table(doc: Document, swot):
     table._tbl.remove(table.rows[2]._tr)
 
 
+def _build_porters_table(doc: Document, forces):
+    """Render Porter's Five Forces as a colour-coded ratings table."""
+    rows = [
+        ("Competitive Rivalry", forces.competitive_rivalry),
+        ("Threat of New Entrants", forces.threat_of_new_entrants),
+        ("Threat of Substitutes", forces.threat_of_substitutes),
+        ("Bargaining Power of Suppliers", forces.bargaining_power_of_suppliers),
+        ("Bargaining Power of Buyers", forces.bargaining_power_of_buyers),
+    ]
+    rating_bg = {"Low": "DCFCE7", "Medium": "FEF3C7", "High": "FEE2E2"}
+
+    table = doc.add_table(rows=1 + len(rows), cols=3)
+    table.style = "Table Grid"
+    table.autofit = False
+
+    header_row = table.rows[0]
+    headers = [("FORCE", Inches(2.3)), ("RATING", Inches(0.9)), ("RATIONALE", Inches(3.5))]
+    for cell, (label, width) in zip(header_row.cells, headers):
+        _set_cell_background(cell, "1A376C")
+        cell.width = width
+        para = cell.paragraphs[0]
+        para.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        run = para.add_run(label)
+        run.font.bold = True
+        run.font.size = Pt(10)
+        run.font.color.rgb = COLOR_WHITE
+
+    for row_idx, (label, force) in enumerate(rows, start=1):
+        row = table.rows[row_idx]
+        # Force name
+        name_cell = row.cells[0]
+        name_cell.width = headers[0][1]
+        np = name_cell.paragraphs[0]
+        nrun = np.add_run(label)
+        nrun.font.bold = True
+        nrun.font.size = Pt(10)
+        # Rating
+        rating_cell = row.cells[1]
+        rating_cell.width = headers[1][1]
+        _set_cell_background(rating_cell, rating_bg.get(force.rating, "FFFFFF"))
+        rp = rating_cell.paragraphs[0]
+        rp.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        rrun = rp.add_run(force.rating)
+        rrun.font.bold = True
+        rrun.font.size = Pt(10)
+        # Rationale
+        rationale_cell = row.cells[2]
+        rationale_cell.width = headers[2][1]
+        rcp = rationale_cell.paragraphs[0]
+        rcrun = rcp.add_run(force.rationale)
+        rcrun.font.size = Pt(9.5)
+
+    doc.add_paragraph()
+    summary_para = doc.add_paragraph()
+    summary_run = summary_para.add_run("Industry attractiveness: ")
+    summary_run.font.bold = True
+    summary_run.font.size = Pt(10)
+    summary_para.add_run(forces.summary)
+
+
 def _build_competitor_table(doc: Document, competitors):
     """Build a structured competitor comparison table."""
     headers = ["Company", "Overview", "Key Strength", "Key Weakness"]
@@ -312,6 +372,15 @@ def generate_docx_report(
     _add_heading(doc, "SWOT Analysis")
     _add_horizontal_rule(doc)
     _build_swot_table(doc, analysis.swot)
+
+    doc.add_paragraph()
+
+    # -----------------------------------------------------------------------
+    # 5b. Porter's Five Forces
+    # -----------------------------------------------------------------------
+    _add_heading(doc, "Porter's Five Forces")
+    _add_horizontal_rule(doc)
+    _build_porters_table(doc, analysis.porters_five_forces)
 
     doc.add_paragraph()
 
