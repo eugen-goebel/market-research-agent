@@ -2,7 +2,22 @@
 
 import pytest
 from pydantic import ValidationError
-from agents.analyst import AnalysisResult, SWOTAnalysis, Competitor
+from agents.analyst import (
+    AnalysisResult, SWOTAnalysis, Competitor, Force, PortersFiveForces,
+)
+
+
+def _minimal_forces() -> PortersFiveForces:
+    """Build a placeholder Porter's Five Forces for tests that don't focus on it."""
+    f = Force(rating="Medium", rationale="Test rationale.")
+    return PortersFiveForces(
+        competitive_rivalry=f,
+        threat_of_new_entrants=f,
+        threat_of_substitutes=f,
+        bargaining_power_of_suppliers=f,
+        bargaining_power_of_buyers=f,
+        summary="Test summary.",
+    )
 
 
 class TestSWOTAnalysis:
@@ -88,6 +103,7 @@ class TestAnalysisResult:
                 strengths=["S1"], weaknesses=["W1"],
                 opportunities=["O1"], threats=["T1"],
             ),
+            porters_five_forces=_minimal_forces(),
             top_competitors=[
                 Competitor(
                     name="Rival Inc",

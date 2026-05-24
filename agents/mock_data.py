@@ -5,7 +5,13 @@ Provides realistic AnalysisResult instances so the full pipeline
 (report generation, DOCX output, styling) can be tested without an API key.
 """
 
-from .analyst import AnalysisResult, SWOTAnalysis, Competitor
+from .analyst import (
+    AnalysisResult,
+    Competitor,
+    Force,
+    PortersFiveForces,
+    SWOTAnalysis,
+)
 
 
 SAP_MOCK = AnalysisResult(
@@ -64,6 +70,54 @@ SAP_MOCK = AnalysisResult(
             "AI-native ERP startups (e.g., Workday for HCM) reducing SAP's edge in niches",
             "Macro slowdown delaying large transformation projects and license upgrades",
         ],
+    ),
+    porters_five_forces=PortersFiveForces(
+        competitive_rivalry=Force(
+            rating="High",
+            rationale=(
+                "Oracle, Microsoft Dynamics, Salesforce and Workday all compete head-on with "
+                "SAP across ERP, CRM and HCM. Cloud-native challengers and aggressive "
+                "displacement pricing keep intensity elevated despite SAP's installed-base lock-in."
+            ),
+        ),
+        threat_of_new_entrants=Force(
+            rating="Low",
+            rationale=(
+                "Enterprise ERP requires deep industry-specific functionality, certified partner "
+                "networks and multi-year implementation expertise. Capital and time to build a "
+                "credible alternative from scratch is prohibitive for new entrants."
+            ),
+        ),
+        threat_of_substitutes=Force(
+            rating="Medium",
+            rationale=(
+                "Best-of-breed SaaS in narrow domains (Workday HCM, Salesforce CRM, NetSuite "
+                "mid-market) can replace SAP modules piecewise. AI-native vertical solutions "
+                "are also emerging, though full SAP S/4HANA substitution remains rare."
+            ),
+        ),
+        bargaining_power_of_suppliers=Force(
+            rating="Low",
+            rationale=(
+                "SAP owns its core IP and runs on commodity cloud infrastructure (AWS, Azure, "
+                "GCP) plus its own data centers. Hyperscaler relationships are diversified, so "
+                "individual suppliers have limited pricing power."
+            ),
+        ),
+        bargaining_power_of_buyers=Force(
+            rating="Medium",
+            rationale=(
+                "Large enterprises negotiate hard at renewal and threaten cloud-native "
+                "alternatives, but high switching costs and 18-24 month migration timelines "
+                "limit how far they will actually move."
+            ),
+        ),
+        summary=(
+            "The ERP industry is structurally attractive for incumbents: high entry barriers and "
+            "weak supplier power protect SAP's profitability, while intense rivalry and rising "
+            "buyer leverage cap pricing upside. Substitution risk is the most strategically "
+            "important force to monitor as cloud-native challengers chip away at individual modules."
+        ),
     ),
     top_competitors=[
         Competitor(
@@ -164,6 +218,55 @@ ZALANDO_MOCK = AnalysisResult(
             "About You (acquired by Zalando) integration risks and execution challenges",
             "Consumer spending pressures from inflation reducing discretionary fashion spend",
         ],
+    ),
+    porters_five_forces=PortersFiveForces(
+        competitive_rivalry=Force(
+            rating="High",
+            rationale=(
+                "Online fashion is a brutally competitive arena with ASOS, About You, Amazon "
+                "Fashion, and ultra-low-price entrants Shein and Temu all chasing the same "
+                "European consumer. Price promotions and free shipping are table stakes, "
+                "compressing margins industry-wide."
+            ),
+        ),
+        threat_of_new_entrants=Force(
+            rating="Medium",
+            rationale=(
+                "Building a basic online fashion store is cheap, but matching Zalando's 6,000+ "
+                "brand partnerships and logistics network across 25 countries requires years of "
+                "capital investment. Chinese marketplaces have shown the model can be disrupted "
+                "with enough scale and subsidy."
+            ),
+        ),
+        threat_of_substitutes=Force(
+            rating="High",
+            rationale=(
+                "Customers can shop at brand-direct DTC sites, peer-to-peer resale platforms "
+                "(Vinted, Depop), traditional retailers' own e-commerce, or marketplaces. "
+                "Switching costs for shoppers are essentially zero."
+            ),
+        ),
+        bargaining_power_of_suppliers=Force(
+            rating="Medium",
+            rationale=(
+                "Premium brands have leverage to dictate placement, exclusivity and pricing on "
+                "Zalando — but mid-tier and emerging labels need Zalando's reach more than "
+                "Zalando needs any single brand."
+            ),
+        ),
+        bargaining_power_of_buyers=Force(
+            rating="High",
+            rationale=(
+                "Price comparison is one click away, free returns are expected, and customer "
+                "loyalty in fast fashion is weak. Buyers can and do walk away over a few euros."
+            ),
+        ),
+        summary=(
+            "The European online fashion market is structurally tough: intense rivalry, easy "
+            "substitution and high buyer power keep margins thin. Zalando's ZEOS platform "
+            "strategy and proprietary logistics are credible attempts to escape the commodity "
+            "trap, but the industry remains far less attractive than enterprise software peers."
+        ),
     ),
     top_competitors=[
         Competitor(

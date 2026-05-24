@@ -3,8 +3,22 @@
 import os
 
 from agents.mock_data import SAP_MOCK
-from agents.analyst import AnalysisResult, SWOTAnalysis, Competitor
+from agents.analyst import (
+    AnalysisResult, SWOTAnalysis, Competitor, Force, PortersFiveForces,
+)
 from utils.pdf_report_generator import generate_pdf_report
+
+
+def _minimal_forces() -> PortersFiveForces:
+    f = Force(rating="Medium", rationale="Test rationale.")
+    return PortersFiveForces(
+        competitive_rivalry=f,
+        threat_of_new_entrants=f,
+        threat_of_substitutes=f,
+        bargaining_power_of_suppliers=f,
+        bargaining_power_of_buyers=f,
+        summary="Test summary.",
+    )
 
 
 class TestPDFReportGeneration:
@@ -53,6 +67,7 @@ class TestPDFReportWithMinimalData:
                 strengths=["S"], weaknesses=["W"],
                 opportunities=["O"], threats=["T"],
             ),
+            porters_five_forces=_minimal_forces(),
             top_competitors=[
                 Competitor(
                     name="Rival",
