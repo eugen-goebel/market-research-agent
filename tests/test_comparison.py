@@ -7,9 +7,23 @@ import sys
 import pytest
 from unittest.mock import MagicMock, patch
 
-from agents.analyst import AnalysisResult, SWOTAnalysis, Competitor
+from agents.analyst import (
+    AnalysisResult, SWOTAnalysis, Competitor, Force, PortersFiveForces,
+)
 from agents.mock_data import SAP_MOCK, ZALANDO_MOCK, COMPARISON_MOCKS
 from utils.comparison_report import generate_comparison_report
+
+
+def _minimal_forces() -> PortersFiveForces:
+    f = Force(rating="Medium", rationale="Test rationale.")
+    return PortersFiveForces(
+        competitive_rivalry=f,
+        threat_of_new_entrants=f,
+        threat_of_substitutes=f,
+        bargaining_power_of_suppliers=f,
+        bargaining_power_of_buyers=f,
+        summary="Test summary.",
+    )
 
 
 @pytest.fixture
@@ -22,6 +36,7 @@ def minimal_analysis():
             strengths=["S1"], weaknesses=["W1"],
             opportunities=["O1"], threats=["T1"],
         ),
+        porters_five_forces=_minimal_forces(),
         top_competitors=[
             Competitor(name="Rival", overview="Desc",
                        key_strength="Strong", key_weakness="Weak"),
