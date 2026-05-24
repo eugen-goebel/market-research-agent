@@ -207,7 +207,7 @@ def _add_porters_table(pdf: _ReportPDF, forces):
         rationale = _sanitize(force.rationale)
         line_count = max(1, len(pdf.multi_cell(
             widths[2], 4.5, rationale, border=0, align="L",
-            split_only=True,
+            dry_run=True, output="LINES",
         )))
         row_height = max(8, line_count * 4.5 + 1.5)
 
