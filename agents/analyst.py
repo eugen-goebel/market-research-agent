@@ -5,6 +5,8 @@ Uses structured outputs (Pydantic) to guarantee a consistent,
 machine-readable result that the report generator can reliably consume.
 """
 
+from typing import Literal
+
 import anthropic
 from pydantic import BaseModel, Field
 
@@ -18,6 +20,38 @@ class SWOTAnalysis(BaseModel):
     weaknesses: list[str] = Field(description="Internal weaknesses or limitations (3–5 items)")
     opportunities: list[str] = Field(description="External opportunities the company can exploit (3–5 items)")
     threats: list[str] = Field(description="External threats or risks facing the company (3–5 items)")
+
+
+class Force(BaseModel):
+    """One of Porter's Five Forces — a rating plus the rationale."""
+    rating: Literal["Low", "Medium", "High"] = Field(
+        description="Strength of this force in the industry: Low, Medium or High"
+    )
+    rationale: str = Field(
+        description="2-3 sentences justifying the rating, grounded in the research brief"
+    )
+
+
+class PortersFiveForces(BaseModel):
+    """Porter's Five Forces industry attractiveness analysis."""
+    competitive_rivalry: Force = Field(
+        description="Intensity of competition between existing players"
+    )
+    threat_of_new_entrants: Force = Field(
+        description="How easily new companies can enter the market"
+    )
+    threat_of_substitutes: Force = Field(
+        description="Risk that customers switch to alternative products or services"
+    )
+    bargaining_power_of_suppliers: Force = Field(
+        description="Leverage suppliers have over the company on price and terms"
+    )
+    bargaining_power_of_buyers: Force = Field(
+        description="Leverage customers have over the company on price and terms"
+    )
+    summary: str = Field(
+        description="One paragraph overall industry-attractiveness assessment"
+    )
 
 
 class Competitor(BaseModel):
@@ -38,6 +72,9 @@ class AnalysisResult(BaseModel):
         description="Paragraph describing market standing, competitive advantages, and customer base"
     )
     swot: SWOTAnalysis
+    porters_five_forces: PortersFiveForces = Field(
+        description="Porter's Five Forces analysis of industry attractiveness"
+    )
     top_competitors: list[Competitor] = Field(
         description="3–5 main competitors with structured comparison"
     )
@@ -63,6 +100,8 @@ Guidelines:
 - Be concise but substantive — bullet points should be specific, not generic
 - Base your analysis strictly on the research provided; do not invent facts
 - SWOT items should be company-specific, not industry clichés
+- For Porter's Five Forces, rate each force as Low / Medium / High and back
+  the rating with 2-3 sentences of evidence drawn from the brief
 - Competitors should be the actual named rivals from the research
 - The investment thesis should reflect current strategic context"""
 

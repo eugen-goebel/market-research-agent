@@ -169,6 +169,77 @@ def _add_swot_table(pdf: _ReportPDF, swot):
         pdf.ln(3)
 
 
+def _add_porters_table(pdf: _ReportPDF, forces):
+    """Render Porter's Five Forces as a rating-coloured table."""
+    rows = [
+        ("Competitive Rivalry", forces.competitive_rivalry),
+        ("Threat of New Entrants", forces.threat_of_new_entrants),
+        ("Threat of Substitutes", forces.threat_of_substitutes),
+        ("Bargaining Power of Suppliers", forces.bargaining_power_of_suppliers),
+        ("Bargaining Power of Buyers", forces.bargaining_power_of_buyers),
+    ]
+    rating_bg = {
+        "Low": COLOR_GREEN_BG,
+        "Medium": COLOR_AMBER_BG,
+        "High": COLOR_RED_BG,
+    }
+    widths = [55, 18, 105]  # mm — force / rating / rationale
+    available = pdf.w - pdf.l_margin - pdf.r_margin
+    scale = available / sum(widths)
+    widths = [w * scale for w in widths]
+
+    # Header
+    pdf.set_font("Helvetica", "B", 9)
+    pdf.set_fill_color(*COLOR_DARK_BLUE)
+    pdf.set_text_color(*COLOR_WHITE)
+    for label, w in zip(["Force", "Rating", "Rationale"], widths):
+        pdf.cell(w, 7, label, border=1, fill=True, align="C")
+    pdf.ln()
+
+    # Rows — multi-line rationale
+    pdf.set_text_color(*COLOR_BLACK)
+    for label, force in rows:
+        x_start = pdf.l_margin
+        y_start = pdf.get_y()
+
+        # Compute height needed for the rationale at width widths[2]
+        pdf.set_font("Helvetica", "", 8.5)
+        rationale = _sanitize(force.rationale)
+        line_count = max(1, len(pdf.multi_cell(
+            widths[2], 4.5, rationale, border=0, align="L",
+            dry_run=True, output="LINES",
+        )))
+        row_height = max(8, line_count * 4.5 + 1.5)
+
+        # Force name cell
+        pdf.set_xy(x_start, y_start)
+        pdf.set_font("Helvetica", "B", 9)
+        pdf.set_fill_color(*COLOR_WHITE)
+        pdf.cell(widths[0], row_height, _sanitize(label), border=1, fill=True)
+
+        # Rating cell — coloured background
+        pdf.set_xy(x_start + widths[0], y_start)
+        pdf.set_fill_color(*rating_bg.get(force.rating, COLOR_WHITE))
+        pdf.set_font("Helvetica", "B", 9)
+        pdf.cell(widths[1], row_height, force.rating, border=1, fill=True, align="C")
+
+        # Rationale cell
+        pdf.set_xy(x_start + widths[0] + widths[1], y_start)
+        pdf.set_fill_color(*COLOR_WHITE)
+        pdf.set_font("Helvetica", "", 8.5)
+        pdf.multi_cell(widths[2], row_height / line_count, rationale, border=1, align="L", fill=True)
+
+        # Advance Y for the next row
+        pdf.set_xy(x_start, y_start + row_height)
+
+    pdf.ln(2)
+    pdf.set_font("Helvetica", "B", 9.5)
+    pdf.cell(0, 5, "Industry attractiveness:", new_x="LMARGIN", new_y="NEXT")
+    pdf.set_font("Helvetica", "", 9.5)
+    pdf.multi_cell(0, 4.5, _sanitize(forces.summary))
+    pdf.ln(3)
+
+
 def _add_competitor_table(pdf: _ReportPDF, competitors):
     headers = ["Company", "Overview", "Key Strength", "Key Weakness"]
     widths = [30, 62, 45, 45]
@@ -241,6 +312,9 @@ def generate_pdf_report(
 
     _add_heading(pdf, "SWOT Analysis")
     _add_swot_table(pdf, analysis.swot)
+
+    _add_heading(pdf, "Porter's Five Forces")
+    _add_porters_table(pdf, analysis.porters_five_forces)
 
     _add_heading(pdf, "Competitive Landscape")
     _add_competitor_table(pdf, analysis.top_competitors)
