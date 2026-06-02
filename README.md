@@ -1,6 +1,6 @@
 # Market Research Agent
 
-> **Multi-agent AI system that generates professional market research reports — fully automated, from web search to formatted DOCX — in under 2 minutes.**
+> **Multi-agent AI system that generates professional market research reports (fully automated, from web search to formatted DOCX) in under 2 minutes.**
 
 ![CI](https://github.com/eugen-goebel/market-research-agent/actions/workflows/tests.yml/badge.svg)
 ![Python](https://img.shields.io/badge/Python-3.10+-blue)
@@ -16,13 +16,13 @@ Uses the [Anthropic Python SDK](https://github.com/anthropics/anthropic-sdk-pyth
 
 Generated from the bundled SAP SE mock data via `python3 main.py --dry-run --format pdf`:
 
-**Cover Page** — report header with company name and generation date
+**Cover Page**: report header with company name and generation date
 ![Cover](docs/screenshots/01-cover.png)
 
-**Executive Summary, Company Overview & SWOT** — core findings plus a full SWOT matrix
+**Executive Summary, Company Overview & SWOT**: core findings plus a full SWOT matrix
 ![Summary and SWOT](docs/screenshots/02-summary-swot.png)
 
-**Competitive Landscape, Trends & Risk Factors** — competitor comparison table, industry trends, strategic outlook
+**Competitive Landscape, Trends & Risk Factors**: competitor comparison table, industry trends, strategic outlook
 ![Competitive Landscape and Outlook](docs/screenshots/03-competitive-outlook.png)
 
 ---
@@ -125,11 +125,11 @@ python -m pytest tests/ -v
 ```
 
 The test suite covers:
-- **Model validation** — Pydantic schemas, serialization, edge cases
-- **Mock data integrity** — ensures dry-run data is complete and valid
-- **Report generation** — DOCX output, section presence, table structure
-- **Agent logic** — web search tool usage, pause_turn handling, structured outputs
-- **CLI integration** — argument parsing, dry-run mode, error handling
+- **Model validation**: Pydantic schemas, serialization, edge cases
+- **Mock data integrity**: ensures dry-run data is complete and valid
+- **Report generation**: DOCX output, section presence, table structure
+- **Agent logic**: web search tool usage, pause_turn handling, structured outputs
+- **CLI integration**: argument parsing, dry-run mode, error handling
 
 ---
 
@@ -170,22 +170,22 @@ market-research-agent/
 
 ## Tech Stack
 
-- **[Anthropic Python SDK](https://github.com/anthropics/anthropic-sdk-python)** — LLM API integration
-- **Server-side Web Search** — `web_search_20260209` tool for live web results
-- **Structured Outputs** — Pydantic models for guaranteed JSON schema compliance
-- **Adaptive Thinking** — LLM reasons about search strategy before acting
-- **[python-docx](https://python-docx.readthedocs.io/)** — Professional Word document generation
-- **[Pydantic v2](https://docs.pydantic.dev/)** — Data validation and structured output parsing
+- **[Anthropic Python SDK](https://github.com/anthropics/anthropic-sdk-python)**: LLM API integration
+- **Server-side Web Search**: `web_search_20260209` tool for live web results
+- **Structured Outputs**: Pydantic models for guaranteed JSON schema compliance
+- **Adaptive Thinking**: LLM reasons about search strategy before acting
+- **[python-docx](https://python-docx.readthedocs.io/)**: Professional Word document generation
+- **[Pydantic v2](https://docs.pydantic.dev/)**: Data validation and structured output parsing
 
 ---
 
 ## Key Concepts Demonstrated
 
-- **Multi-agent architecture** — separation of concerns across specialized agents
-- **Agentic tool use** — autonomous web search with `pause_turn` handling
-- **Structured outputs** — guaranteed schema compliance via Pydantic
-- **Extended thinking** — adaptive reasoning for better search and analysis quality
-- **Pipeline orchestration** — coordinating async agents with shared state
+- **Multi-agent architecture**: separation of concerns across specialized agents
+- **Agentic tool use**: autonomous web search with `pause_turn` handling
+- **Structured outputs**: guaranteed schema compliance via Pydantic
+- **Extended thinking**: adaptive reasoning for better search and analysis quality
+- **Pipeline orchestration**: coordinating async agents with shared state
 
 ---
 
