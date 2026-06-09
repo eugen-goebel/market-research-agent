@@ -1,7 +1,7 @@
 """Tests for mock data integrity — ensures dry-run mode works correctly."""
 
+from agents.analyst import AnalysisResult, Competitor, SWOTAnalysis
 from agents.mock_data import SAP_MOCK
-from agents.analyst import AnalysisResult, SWOTAnalysis, Competitor
 
 
 class TestMockDataIntegrity:

@@ -7,7 +7,6 @@ autonomously decides when and what to search without manual tool-loop handling.
 
 import anthropic
 
-
 SYSTEM_PROMPT = """You are a senior market research analyst at a top-tier consulting firm.
 Your task is to produce a thorough, factual research brief on a given company.
 
@@ -85,7 +84,5 @@ class ResearchAgent:
 
         # Extract all text blocks from the final response
         return "\n\n".join(
-            block.text
-            for block in response.content
-            if hasattr(block, "text") and block.text
+            block.text for block in response.content if hasattr(block, "text") and block.text
         )

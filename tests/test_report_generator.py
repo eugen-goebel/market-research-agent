@@ -1,12 +1,17 @@
 """Tests for DOCX report generation."""
 
 import os
+
 from docx import Document
 
-from agents.mock_data import SAP_MOCK
 from agents.analyst import (
-    AnalysisResult, SWOTAnalysis, Competitor, Force, PortersFiveForces,
+    AnalysisResult,
+    Competitor,
+    Force,
+    PortersFiveForces,
+    SWOTAnalysis,
 )
+from agents.mock_data import SAP_MOCK
 from utils.report_generator import generate_docx_report
 
 
@@ -103,8 +108,10 @@ class TestReportWithMinimalData:
             company_overview="Overview.",
             market_position="Position.",
             swot=SWOTAnalysis(
-                strengths=["S"], weaknesses=["W"],
-                opportunities=["O"], threats=["T"],
+                strengths=["S"],
+                weaknesses=["W"],
+                opportunities=["O"],
+                threats=["T"],
             ),
             porters_five_forces=_minimal_forces(),
             top_competitors=[

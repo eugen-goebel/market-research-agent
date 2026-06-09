@@ -7,14 +7,14 @@ SWOT comparison matrices, competitor overlap tables, and trend analysis.
 
 import os
 from datetime import datetime
+
 from docx import Document
-from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.shared import Inches, Pt, RGBColor
 
 from agents.analyst import AnalysisResult
-
 
 # ---------------------------------------------------------------------------
 # Colors
@@ -174,7 +174,7 @@ def _swot_comparison(doc, companies, analyses):
     """SWOT matrix comparison: one row per SWOT category, columns per company."""
     swot_fields = ["strengths", "weaknesses", "opportunities", "threats"]
 
-    for (label, header_color, bg_color), field in zip(SWOT_LABELS, swot_fields):
+    for (label, header_color, bg_color), field in zip(SWOT_LABELS, swot_fields, strict=False):
         cols = len(companies) + 1
         table = doc.add_table(rows=2, cols=cols)
         table.style = "Table Grid"
@@ -230,7 +230,7 @@ def _competitor_table(doc, companies, analyses):
     """Combined competitor landscape table."""
     headers = ["Analyzed Company", "Competitor", "Key Strength", "Key Weakness"]
     rows_data = []
-    for name, a in zip(companies, analyses):
+    for name, a in zip(companies, analyses, strict=False):
         for comp in a.top_competitors[:3]:
             rows_data.append((name, comp.name, comp.key_strength, comp.key_weakness))
 

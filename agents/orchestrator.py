@@ -8,11 +8,13 @@ Pipeline:
 """
 
 import anthropic
-from .researcher import ResearchAgent
-from .analyst import AnalysisAgent, AnalysisResult
-from utils.report_generator import generate_docx_report
-from utils.pdf_report_generator import generate_pdf_report
+
 from utils.comparison_report import generate_comparison_report
+from utils.pdf_report_generator import generate_pdf_report
+from utils.report_generator import generate_docx_report
+
+from .analyst import AnalysisAgent, AnalysisResult
+from .researcher import ResearchAgent
 
 
 class MarketResearchOrchestrator:
@@ -24,7 +26,9 @@ class MarketResearchOrchestrator:
         output_dir: Directory where generated reports are saved
     """
 
-    def __init__(self, api_key: str | None = None, output_dir: str = "output", report_format: str = "docx"):
+    def __init__(
+        self, api_key: str | None = None, output_dir: str = "output", report_format: str = "docx"
+    ):
         self.client = anthropic.Anthropic(api_key=api_key)
         self.output_dir = output_dir
         self.report_format = report_format
@@ -41,9 +45,9 @@ class MarketResearchOrchestrator:
         Returns:
             Absolute path to the generated DOCX report
         """
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"  Market Research Agent  —  {company}")
-        print(f"{'='*60}\n")
+        print(f"{'=' * 60}\n")
 
         # ---------------------------------------------------------------
         # Phase 1: Research
@@ -63,11 +67,13 @@ class MarketResearchOrchestrator:
 
         analysis = self._analyst.analyze(company, research_brief)
 
-        print(f"       ✓ Analysis complete")
-        print(f"         • SWOT: {len(analysis.swot.strengths)}S / "
-              f"{len(analysis.swot.weaknesses)}W / "
-              f"{len(analysis.swot.opportunities)}O / "
-              f"{len(analysis.swot.threats)}T")
+        print("       ✓ Analysis complete")
+        print(
+            f"         • SWOT: {len(analysis.swot.strengths)}S / "
+            f"{len(analysis.swot.weaknesses)}W / "
+            f"{len(analysis.swot.opportunities)}O / "
+            f"{len(analysis.swot.threats)}T"
+        )
         print(f"         • Competitors: {len(analysis.top_competitors)}")
         print(f"         • Trends: {len(analysis.key_trends)}\n")
 
@@ -85,9 +91,9 @@ class MarketResearchOrchestrator:
         )
 
         print(f"       ✓ Report saved:\n       {report_path}\n")
-        print(f"{'='*60}")
-        print(f"  Done! Open the report in Microsoft Word or LibreOffice.")
-        print(f"{'='*60}\n")
+        print(f"{'=' * 60}")
+        print("  Done! Open the report in Microsoft Word or LibreOffice.")
+        print(f"{'=' * 60}\n")
 
         return report_path
 
@@ -105,9 +111,9 @@ class MarketResearchOrchestrator:
         total = len(companies)
 
         for idx, company in enumerate(companies, 1):
-            print(f"\n{'='*60}")
+            print(f"\n{'=' * 60}")
             print(f"  Analyzing {idx}/{total}: {company}")
-            print(f"{'='*60}\n")
+            print(f"{'=' * 60}\n")
 
             print("[1/2]  ResearchAgent: Gathering web intelligence...")
             research_brief = self._researcher.research(company)
@@ -116,14 +122,14 @@ class MarketResearchOrchestrator:
 
             print("[2/2]  AnalysisAgent: Structuring analysis & SWOT...\n")
             analysis = self._analyst.analyze(company, research_brief)
-            print(f"       Analysis complete")
+            print("       Analysis complete")
             print(f"         Competitors: {len(analysis.top_competitors)}")
             print(f"         Trends: {len(analysis.key_trends)}\n")
             analyses.append(analysis)
 
-        print(f"\n{'='*60}")
-        print(f"  Generating comparison report...")
-        print(f"{'='*60}\n")
+        print(f"\n{'=' * 60}")
+        print("  Generating comparison report...")
+        print(f"{'=' * 60}\n")
 
         report_path = generate_comparison_report(companies, analyses, self.output_dir)
         print(f"       Report saved:\n       {report_path}\n")
@@ -131,7 +137,9 @@ class MarketResearchOrchestrator:
         return report_path
 
     def run_comparison_with_mock(
-        self, companies: list[str], analyses: list[AnalysisResult],
+        self,
+        companies: list[str],
+        analyses: list[AnalysisResult],
     ) -> str:
         """Run comparison with pre-built analysis data (for --dry-run)."""
         print(f"\n  Generating comparison report for: {', '.join(companies)}")
