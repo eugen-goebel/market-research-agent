@@ -2,8 +2,13 @@
 
 import pytest
 from pydantic import ValidationError
+
 from agents.analyst import (
-    AnalysisResult, SWOTAnalysis, Competitor, Force, PortersFiveForces,
+    AnalysisResult,
+    Competitor,
+    Force,
+    PortersFiveForces,
+    SWOTAnalysis,
 )
 
 
@@ -34,9 +39,7 @@ class TestSWOTAnalysis:
         assert swot.weaknesses[0] == "Slow growth"
 
     def test_empty_lists_allowed(self):
-        swot = SWOTAnalysis(
-            strengths=[], weaknesses=[], opportunities=[], threats=[]
-        )
+        swot = SWOTAnalysis(strengths=[], weaknesses=[], opportunities=[], threats=[])
         assert swot.strengths == []
 
     def test_multiple_items(self):
@@ -54,9 +57,7 @@ class TestSWOTAnalysis:
             SWOTAnalysis(strengths=["A"], weaknesses=["B"], opportunities=["C"])
 
     def test_serialization_roundtrip(self):
-        swot = SWOTAnalysis(
-            strengths=["S"], weaknesses=["W"], opportunities=["O"], threats=["T"]
-        )
+        swot = SWOTAnalysis(strengths=["S"], weaknesses=["W"], opportunities=["O"], threats=["T"])
         data = swot.model_dump()
         restored = SWOTAnalysis(**data)
         assert restored == swot
@@ -100,8 +101,10 @@ class TestAnalysisResult:
             company_overview="Test overview.",
             market_position="Test position.",
             swot=SWOTAnalysis(
-                strengths=["S1"], weaknesses=["W1"],
-                opportunities=["O1"], threats=["T1"],
+                strengths=["S1"],
+                weaknesses=["W1"],
+                opportunities=["O1"],
+                threats=["T1"],
             ),
             porters_five_forces=_minimal_forces(),
             top_competitors=[

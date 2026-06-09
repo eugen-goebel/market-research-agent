@@ -13,7 +13,9 @@ Usage:
 import argparse
 import os
 import sys
+
 from dotenv import load_dotenv
+
 from agents.orchestrator import MarketResearchOrchestrator
 
 
@@ -74,27 +76,27 @@ def main():
     # Dry-run: generate report from mock data, no API key required
     # -----------------------------------------------------------------------
     if args.dry_run:
-        from agents.mock_data import SAP_MOCK, COMPARISON_MOCKS
+        from agents.mock_data import COMPARISON_MOCKS, SAP_MOCK
 
         if args.compare:
             companies = args.compare
             analyses = [COMPARISON_MOCKS.get(c, SAP_MOCK) for c in companies]
-            print(f"\n{'='*60}")
-            print(f"  DRY RUN — COMPETITOR COMPARISON")
+            print(f"\n{'=' * 60}")
+            print("  DRY RUN — COMPETITOR COMPARISON")
             print(f"  Companies: {', '.join(companies)}")
-            print(f"{'='*60}\n")
+            print(f"{'=' * 60}\n")
 
             orch = MarketResearchOrchestrator(output_dir=args.output)
             report_path = orch.run_comparison_with_mock(companies, analyses)
         else:
-            from utils.report_generator import generate_docx_report
             from utils.pdf_report_generator import generate_pdf_report
+            from utils.report_generator import generate_docx_report
 
             company = args.company or "SAP SE"
             fmt = args.format
-            print(f"\n{'='*60}")
+            print(f"\n{'=' * 60}")
             print(f"  DRY RUN — using mock data for: {company}")
-            print(f"{'='*60}\n")
+            print(f"{'=' * 60}\n")
             print("[1/3]  ResearchAgent:  skipped (dry-run)\n")
             print("[2/3]  AnalysisAgent:  skipped (dry-run)\n")
             print(f"[3/3]  ReportGenerator: building {fmt.upper()}...\n")
@@ -107,9 +109,9 @@ def main():
             )
 
         print(f"       Report saved:\n       {report_path}\n")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
         print("  Open the report in Word or LibreOffice to preview.")
-        print(f"{'='*60}\n")
+        print(f"{'=' * 60}\n")
         return
 
     # -----------------------------------------------------------------------

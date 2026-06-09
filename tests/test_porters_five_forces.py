@@ -10,10 +10,10 @@ from agents.mock_data import SAP_MOCK, ZALANDO_MOCK
 from utils.pdf_report_generator import generate_pdf_report
 from utils.report_generator import generate_docx_report
 
-
 # ---------------------------------------------------------------------------
 # Model
 # ---------------------------------------------------------------------------
+
 
 class TestForceModel:
     def test_valid_force(self):
@@ -62,6 +62,7 @@ class TestPortersFiveForcesModel:
 # Mock data
 # ---------------------------------------------------------------------------
 
+
 class TestMockData:
     def test_sap_mock_has_five_forces(self):
         f = SAP_MOCK.porters_five_forces
@@ -91,11 +92,13 @@ class TestMockData:
 # Report integration
 # ---------------------------------------------------------------------------
 
+
 class TestReportIntegration:
     def test_docx_contains_porters_section(self, tmp_path):
         path = generate_docx_report("SAP SE", SAP_MOCK, output_dir=str(tmp_path))
         assert os.path.exists(path)
         from docx import Document
+
         doc = Document(path)
         text = "\n".join(p.text for p in doc.paragraphs)
         assert "Porter" in text
@@ -114,7 +117,7 @@ class TestReportIntegration:
 
     def test_pdf_porters_helper_runs_without_error(self, tmp_path):
         """Direct exercise of _add_porters_table on the mock forces."""
-        from utils.pdf_report_generator import _ReportPDF, _add_porters_table
+        from utils.pdf_report_generator import _add_porters_table, _ReportPDF
 
         pdf = _ReportPDF("Test")
         pdf.add_page()

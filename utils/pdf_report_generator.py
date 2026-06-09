@@ -7,10 +7,10 @@ competitor matrix, and all analysis sections.
 
 import os
 from datetime import datetime
+
 from fpdf import FPDF
 
 from agents.analyst import AnalysisResult
-
 
 # ---------------------------------------------------------------------------
 # Color palette (matches DOCX theme)
@@ -34,14 +34,14 @@ COLOR_BLACK = (30, 30, 30)
 BULLET = "-"
 
 _UNICODE_REPLACEMENTS = {
-    "\u2013": "-",   # en dash
+    "\u2013": "-",  # en dash
     "\u2014": "--",  # em dash
-    "\u2018": "'",   # left single quote
-    "\u2019": "'",   # right single quote
-    "\u201c": '"',   # left double quote
-    "\u201d": '"',   # right double quote
-    "\u2022": "-",   # bullet
-    "\u20ac": "EUR", # euro sign
+    "\u2018": "'",  # left single quote
+    "\u2019": "'",  # right single quote
+    "\u201c": '"',  # left double quote
+    "\u201d": '"',  # right double quote
+    "\u2022": "-",  # bullet
+    "\u20ac": "EUR",  # euro sign
     "\u00fc": "ue",  # ü
     "\u00e4": "ae",  # ä
     "\u00f6": "oe",  # ö
@@ -70,12 +70,15 @@ class _ReportPDF(FPDF):
         self.set_y(-15)
         self.set_font("Helvetica", "I", 8)
         self.set_text_color(*COLOR_GRAY)
-        self.cell(0, 10, f"Market Research Report  |  {self.company}  |  Page {self.page_no()}", align="C")
+        self.cell(
+            0, 10, f"Market Research Report  |  {self.company}  |  Page {self.page_no()}", align="C"
+        )
 
 
 # ---------------------------------------------------------------------------
 # Section builders
 # ---------------------------------------------------------------------------
+
 
 def _add_cover_page(pdf: _ReportPDF, company: str):
     pdf.add_page()
@@ -93,7 +96,14 @@ def _add_cover_page(pdf: _ReportPDF, company: str):
 
     pdf.set_font("Helvetica", "I", 11)
     pdf.set_text_color(*COLOR_GRAY)
-    pdf.cell(0, 8, f"Generated: {datetime.now().strftime('%B %d, %Y')}", align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(
+        0,
+        8,
+        f"Generated: {datetime.now().strftime('%B %d, %Y')}",
+        align="C",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
 
 
 def _add_heading(pdf: _ReportPDF, text: str):
@@ -131,13 +141,38 @@ def _add_bullet_list(pdf: _ReportPDF, items: list[str]):
 def _add_swot_table(pdf: _ReportPDF, swot):
     col_w = (pdf.w - pdf.l_margin - pdf.r_margin) / 2
     row_pairs = [
-        ("STRENGTHS", swot.strengths, COLOR_GREEN, COLOR_GREEN_BG,
-         "WEAKNESSES", swot.weaknesses, COLOR_AMBER, COLOR_AMBER_BG),
-        ("OPPORTUNITIES", swot.opportunities, COLOR_TEAL, COLOR_TEAL_BG,
-         "THREATS", swot.threats, COLOR_RED, COLOR_RED_BG),
+        (
+            "STRENGTHS",
+            swot.strengths,
+            COLOR_GREEN,
+            COLOR_GREEN_BG,
+            "WEAKNESSES",
+            swot.weaknesses,
+            COLOR_AMBER,
+            COLOR_AMBER_BG,
+        ),
+        (
+            "OPPORTUNITIES",
+            swot.opportunities,
+            COLOR_TEAL,
+            COLOR_TEAL_BG,
+            "THREATS",
+            swot.threats,
+            COLOR_RED,
+            COLOR_RED_BG,
+        ),
     ]
 
-    for left_label, left_items, left_color, left_bg, right_label, right_items, right_color, right_bg in row_pairs:
+    for (
+        left_label,
+        left_items,
+        left_color,
+        left_bg,
+        right_label,
+        right_items,
+        right_color,
+        right_bg,
+    ) in row_pairs:
         # Headers
         pdf.set_font("Helvetica", "B", 10)
         for label, color in [(left_label, left_color), (right_label, right_color)]:
@@ -192,7 +227,7 @@ def _add_porters_table(pdf: _ReportPDF, forces):
     pdf.set_font("Helvetica", "B", 9)
     pdf.set_fill_color(*COLOR_DARK_BLUE)
     pdf.set_text_color(*COLOR_WHITE)
-    for label, w in zip(["Force", "Rating", "Rationale"], widths):
+    for label, w in zip(["Force", "Rating", "Rationale"], widths, strict=False):
         pdf.cell(w, 7, label, border=1, fill=True, align="C")
     pdf.ln()
 
@@ -205,10 +240,20 @@ def _add_porters_table(pdf: _ReportPDF, forces):
         # Compute height needed for the rationale at width widths[2]
         pdf.set_font("Helvetica", "", 8.5)
         rationale = _sanitize(force.rationale)
-        line_count = max(1, len(pdf.multi_cell(
-            widths[2], 4.5, rationale, border=0, align="L",
-            dry_run=True, output="LINES",
-        )))
+        line_count = max(
+            1,
+            len(
+                pdf.multi_cell(
+                    widths[2],
+                    4.5,
+                    rationale,
+                    border=0,
+                    align="L",
+                    dry_run=True,
+                    output="LINES",
+                )
+            ),
+        )
         row_height = max(8, line_count * 4.5 + 1.5)
 
         # Force name cell
@@ -227,7 +272,9 @@ def _add_porters_table(pdf: _ReportPDF, forces):
         pdf.set_xy(x_start + widths[0] + widths[1], y_start)
         pdf.set_fill_color(*COLOR_WHITE)
         pdf.set_font("Helvetica", "", 8.5)
-        pdf.multi_cell(widths[2], row_height / line_count, rationale, border=1, align="L", fill=True)
+        pdf.multi_cell(
+            widths[2], row_height / line_count, rationale, border=1, align="L", fill=True
+        )
 
         # Advance Y for the next row
         pdf.set_xy(x_start, y_start + row_height)
@@ -273,6 +320,7 @@ def _add_competitor_table(pdf: _ReportPDF, competitors):
 # ---------------------------------------------------------------------------
 # Main entry point
 # ---------------------------------------------------------------------------
+
 
 def generate_pdf_report(
     company: str,
