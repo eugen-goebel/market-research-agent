@@ -13,7 +13,6 @@ from .analyst import (
     SWOTAnalysis,
 )
 
-
 SAP_MOCK = AnalysisResult(
     executive_summary=(
         "SAP SE is the world's leading provider of enterprise application software, "

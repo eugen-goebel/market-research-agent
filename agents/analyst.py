@@ -10,20 +10,25 @@ from typing import Literal
 import anthropic
 from pydantic import BaseModel, Field
 
-
 # ---------------------------------------------------------------------------
 # Data models — define the exact shape of the analysis output
 # ---------------------------------------------------------------------------
 
+
 class SWOTAnalysis(BaseModel):
     strengths: list[str] = Field(description="Internal strengths of the company (3–5 items)")
     weaknesses: list[str] = Field(description="Internal weaknesses or limitations (3–5 items)")
-    opportunities: list[str] = Field(description="External opportunities the company can exploit (3–5 items)")
-    threats: list[str] = Field(description="External threats or risks facing the company (3–5 items)")
+    opportunities: list[str] = Field(
+        description="External opportunities the company can exploit (3–5 items)"
+    )
+    threats: list[str] = Field(
+        description="External threats or risks facing the company (3–5 items)"
+    )
 
 
 class Force(BaseModel):
     """One of Porter's Five Forces — a rating plus the rationale."""
+
     rating: Literal["Low", "Medium", "High"] = Field(
         description="Strength of this force in the industry: Low, Medium or High"
     )
@@ -34,6 +39,7 @@ class Force(BaseModel):
 
 class PortersFiveForces(BaseModel):
     """Porter's Five Forces industry attractiveness analysis."""
+
     competitive_rivalry: Force = Field(
         description="Intensity of competition between existing players"
     )
@@ -49,9 +55,7 @@ class PortersFiveForces(BaseModel):
     bargaining_power_of_buyers: Force = Field(
         description="Leverage customers have over the company on price and terms"
     )
-    summary: str = Field(
-        description="One paragraph overall industry-attractiveness assessment"
-    )
+    summary: str = Field(description="One paragraph overall industry-attractiveness assessment")
 
 
 class Competitor(BaseModel):
@@ -84,9 +88,7 @@ class AnalysisResult(BaseModel):
     investment_thesis: str = Field(
         description="2–3 sentence strategic outlook — growth potential or strategic rationale"
     )
-    risk_factors: list[str] = Field(
-        description="3–5 key risks the company faces"
-    )
+    risk_factors: list[str] = Field(description="3–5 key risks the company faces")
 
 
 # ---------------------------------------------------------------------------

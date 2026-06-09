@@ -7,32 +7,33 @@ formatted Word document with cover page, SWOT table, competitor matrix, etc.
 
 import os
 from datetime import datetime
+
 from docx import Document
-from docx.shared import Inches, Pt, RGBColor
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.shared import Inches, Pt, RGBColor
 
 from agents.analyst import AnalysisResult
-
 
 # ---------------------------------------------------------------------------
 # Color palette (corporate blue theme)
 # ---------------------------------------------------------------------------
-COLOR_DARK_BLUE = RGBColor(0x1A, 0x37, 0x6C)   # #1A376C — headers
-COLOR_MED_BLUE  = RGBColor(0x2E, 0x6D, 0xB4)   # #2E6DB4 — accents
-COLOR_LIGHT_BG  = RGBColor(0xF0, 0xF5, 0xFF)   # #F0F5FF — table backgrounds
-COLOR_GREEN     = RGBColor(0x1D, 0x7A, 0x4A)   # SWOT strengths
-COLOR_RED       = RGBColor(0x9B, 0x1C, 0x1C)   # SWOT threats
-COLOR_AMBER     = RGBColor(0x92, 0x60, 0x0D)   # SWOT weaknesses
-COLOR_TEAL      = RGBColor(0x0D, 0x66, 0x6B)   # SWOT opportunities
-COLOR_WHITE     = RGBColor(0xFF, 0xFF, 0xFF)
+COLOR_DARK_BLUE = RGBColor(0x1A, 0x37, 0x6C)  # #1A376C — headers
+COLOR_MED_BLUE = RGBColor(0x2E, 0x6D, 0xB4)  # #2E6DB4 — accents
+COLOR_LIGHT_BG = RGBColor(0xF0, 0xF5, 0xFF)  # #F0F5FF — table backgrounds
+COLOR_GREEN = RGBColor(0x1D, 0x7A, 0x4A)  # SWOT strengths
+COLOR_RED = RGBColor(0x9B, 0x1C, 0x1C)  # SWOT threats
+COLOR_AMBER = RGBColor(0x92, 0x60, 0x0D)  # SWOT weaknesses
+COLOR_TEAL = RGBColor(0x0D, 0x66, 0x6B)  # SWOT opportunities
+COLOR_WHITE = RGBColor(0xFF, 0xFF, 0xFF)
 COLOR_LIGHT_GRAY = RGBColor(0xF7, 0xF8, 0xFA)
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _set_cell_background(cell, hex_color: str):
     """Set a table cell's background color via XML."""
@@ -90,6 +91,7 @@ def _add_horizontal_rule(doc: Document):
 # Section builders
 # ---------------------------------------------------------------------------
 
+
 def _build_cover_page(doc: Document, company: str):
     """Create a styled cover page."""
     doc.add_paragraph()
@@ -144,8 +146,12 @@ def _build_swot_table(doc: Document, swot):
             cell.width = col_width
 
     # Header row
-    headers = [("STRENGTHS", "1D7A4A"), ("WEAKNESSES", "92600D"),
-               ("OPPORTUNITIES", "0D666B"), ("THREATS", "9B1C1C")]
+    headers = [
+        ("STRENGTHS", "1D7A4A"),
+        ("WEAKNESSES", "92600D"),
+        ("OPPORTUNITIES", "0D666B"),
+        ("THREATS", "9B1C1C"),
+    ]
 
     header_row = table.rows[0]
     for i, (label, color) in enumerate(headers[:2]):
@@ -220,7 +226,7 @@ def _build_porters_table(doc: Document, forces):
 
     header_row = table.rows[0]
     headers = [("FORCE", Inches(2.3)), ("RATING", Inches(0.9)), ("RATIONALE", Inches(3.5))]
-    for cell, (label, width) in zip(header_row.cells, headers):
+    for cell, (label, width) in zip(header_row.cells, headers, strict=False):
         _set_cell_background(cell, "1A376C")
         cell.width = width
         para = cell.paragraphs[0]
@@ -306,6 +312,7 @@ def _build_competitor_table(doc: Document, competitors):
 # ---------------------------------------------------------------------------
 # Main entry point
 # ---------------------------------------------------------------------------
+
 
 def generate_docx_report(
     company: str,

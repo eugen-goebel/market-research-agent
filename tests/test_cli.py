@@ -1,8 +1,8 @@
 """Tests for CLI argument parsing."""
 
+import os
 import subprocess
 import sys
-import os
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
