@@ -90,7 +90,7 @@ cd market-research-agent
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 
-pip install -r requirements.txt
+uv sync
 ```
 
 ### 2. Configure API Key
@@ -105,12 +105,12 @@ cp .env.example .env
 
 ```bash
 # Quick test without API key (uses built-in SAP SE mock data):
-python main.py --dry-run
+uv run main.py --dry-run
 
 # With API key:
-python main.py "SAP SE"
-python main.py "Zalando SE" --output ./reports
-python main.py "Tesla Inc"
+uv run main.py "SAP SE"
+uv run main.py "Zalando SE" --output ./reports
+uv run main.py "Tesla Inc"
 ```
 
 The report is saved to `./output/market_research_<company>_<date>.docx`.
@@ -135,7 +135,7 @@ The test suite covers:
 
 ## Example Output
 
-Running `python main.py "SAP SE"` produces a ~8-page Word document:
+Running `uv run main.py "SAP SE"` produces a ~8-page Word document:
 
 <p align="center">
   <img src="assets/report_preview.png" alt="Example report for SAP SE" width="600">
