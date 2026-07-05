@@ -329,17 +329,32 @@ def _add_competitor_table(pdf: _ReportPDF, competitors):
         pdf.cell(widths[i], 8, header, border=1, fill=True, align="C")
     pdf.ln()
 
-    # Data rows
+    # Data rows — wrap every cell and size each row to its tallest cell
     pdf.set_font("Helvetica", "", 9)
     pdf.set_text_color(*COLOR_BLACK)
+    line_h = 4.5
     for idx, comp in enumerate(competitors):
         bg = COLOR_LIGHT_BG if idx % 2 == 0 else COLOR_WHITE
-        pdf.set_fill_color(*bg)
         data = [comp.name, comp.overview, comp.key_strength, comp.key_weakness]
-        row_height = 7
-        for i, value in enumerate(data):
-            pdf.cell(widths[i], row_height, _sanitize(value)[:50], border=1, fill=True)
-        pdf.ln()
+        texts = [_sanitize(value) for value in data]
+        lines = [
+            len(pdf.multi_cell(widths[i], line_h, text, dry_run=True, output="LINES"))
+            for i, text in enumerate(texts)
+        ]
+        row_height = max(lines) * line_h + 1.5
+        if pdf.will_page_break(row_height):
+            pdf.add_page()
+
+        x = pdf.l_margin
+        y_start = pdf.get_y()
+        pdf.set_fill_color(*bg)
+        for i, text in enumerate(texts):
+            pdf.set_xy(x, y_start)
+            pdf.cell(widths[i], row_height, "", border=1, fill=True)
+            pdf.set_xy(x, y_start + 0.75)
+            pdf.multi_cell(widths[i], line_h, text)
+            x += widths[i]
+        pdf.set_y(y_start + row_height)
 
     pdf.ln(3)
 
