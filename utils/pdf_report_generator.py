@@ -181,23 +181,24 @@ def _add_swot_table(pdf: _ReportPDF, swot):
         right_color,
         right_bg,
     ) in row_pairs:
-        left_text = "\n".join(f"  {BULLET} {_sanitize(item)}" for item in left_items)
-        right_text = "\n".join(f"  {BULLET} {_sanitize(item)}" for item in right_items)
+        line_h = 5
+        bullet_w = 6  # hanging indent: wrapped lines align under the text
+        text_w = col_w - bullet_w - 2
 
-        # Keep header and content of each row pair on the same page:
-        # measure the row height up front and break early if needed
+        # Measure both columns item by item at the indented width, then
+        # break the page early if header + content will not fit
         pdf.set_font("Helvetica", "", 9)
-        left_lines = pdf.multi_cell(col_w, 5, left_text, dry_run=True, output="LINES")
-        right_lines = pdf.multi_cell(col_w, 5, right_text, dry_run=True, output="LINES")
-        row_height = 8 + max(len(left_lines), len(right_lines)) * 5
-        if pdf.will_page_break(row_height):
+        left_n = sum(
+            len(pdf.multi_cell(text_w, line_h, _sanitize(i), dry_run=True, output="LINES"))
+            for i in left_items
+        )
+        right_n = sum(
+            len(pdf.multi_cell(text_w, line_h, _sanitize(i), dry_run=True, output="LINES"))
+            for i in right_items
+        )
+        content_h = max(left_n, right_n) * line_h + 2
+        if pdf.will_page_break(8 + content_h):
             pdf.add_page()
-
-        # Pad the shorter column with blank lines so both boxes are equally
-        # tall and their bottom borders align
-        max_lines = max(len(left_lines), len(right_lines))
-        left_text += "\n" * (max_lines - len(left_lines))
-        right_text += "\n" * (max_lines - len(right_lines))
 
         # Headers
         pdf.set_font("Helvetica", "B", 10)
@@ -207,23 +208,26 @@ def _add_swot_table(pdf: _ReportPDF, swot):
             pdf.cell(col_w, 8, label, border=1, fill=True, align="C")
         pdf.ln()
 
-        # Content
-        pdf.set_font("Helvetica", "", 9)
-        pdf.set_text_color(*COLOR_BLACK)
-
         x_start = pdf.get_x()
         y_start = pdf.get_y()
 
-        pdf.set_fill_color(*left_bg)
-        pdf.multi_cell(col_w, 5, left_text, border="LBR", fill=True)
-        left_height = pdf.get_y() - y_start
+        # Draw both boxes as rectangles of identical height, then lay the
+        # bullets inside with a hanging indent
+        pdf.set_font("Helvetica", "", 9)
+        for i, (bg, items) in enumerate([(left_bg, left_items), (right_bg, right_items)]):
+            x = x_start + i * col_w
+            pdf.set_fill_color(*bg)
+            pdf.rect(x, y_start, col_w, content_h, style="DF")
+            pdf.set_text_color(*COLOR_BLACK)
+            y = y_start + 1
+            for item in items:
+                pdf.set_xy(x + 2, y)
+                pdf.cell(bullet_w - 2, line_h, BULLET)
+                pdf.set_xy(x + bullet_w, y)
+                pdf.multi_cell(text_w, line_h, _sanitize(item))
+                y = pdf.get_y()
 
-        pdf.set_xy(x_start + col_w, y_start)
-        pdf.set_fill_color(*right_bg)
-        pdf.multi_cell(col_w, 5, right_text, border="BR", fill=True)
-        right_height = pdf.get_y() - y_start
-
-        pdf.set_y(y_start + max(left_height, right_height))
+        pdf.set_y(y_start + content_h)
         pdf.ln(3)
 
 
