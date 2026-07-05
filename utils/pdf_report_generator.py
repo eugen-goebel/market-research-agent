@@ -193,6 +193,12 @@ def _add_swot_table(pdf: _ReportPDF, swot):
         if pdf.will_page_break(row_height):
             pdf.add_page()
 
+        # Pad the shorter column with blank lines so both boxes are equally
+        # tall and their bottom borders align
+        max_lines = max(len(left_lines), len(right_lines))
+        left_text += "\n" * (max_lines - len(left_lines))
+        right_text += "\n" * (max_lines - len(right_lines))
+
         # Headers
         pdf.set_font("Helvetica", "B", 10)
         for label, color in [(left_label, left_color), (right_label, right_color)]:
