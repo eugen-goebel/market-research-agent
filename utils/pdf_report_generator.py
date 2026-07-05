@@ -108,6 +108,9 @@ def _add_cover_page(pdf: _ReportPDF, company: str):
 
 def _add_heading(pdf: _ReportPDF, text: str):
     pdf.ln(6)
+    # Keep the heading attached to at least a few lines of its content
+    if pdf.will_page_break(30):
+        pdf.add_page()
     pdf.set_font("Helvetica", "B", 14)
     pdf.set_text_color(*COLOR_DARK_BLUE)
     pdf.cell(0, 10, text, new_x="LMARGIN", new_y="NEXT")
@@ -131,9 +134,14 @@ def _add_bullet_list(pdf: _ReportPDF, items: list[str]):
     pdf.set_font("Helvetica", "", 10)
     pdf.set_text_color(*COLOR_BLACK)
     for item in items:
+        text = _sanitize(item)
+        # Keep each bullet on one page
+        lines = pdf.multi_cell(pdf.epw - 8, 5.5, text, dry_run=True, output="LINES")
+        if pdf.will_page_break(len(lines) * 5.5):
+            pdf.add_page()
         x = pdf.get_x()
         pdf.cell(8, 5.5, BULLET)
-        pdf.multi_cell(0, 5.5, _sanitize(item))
+        pdf.multi_cell(0, 5.5, text)
         pdf.set_x(x)
     pdf.ln(3)
 
@@ -173,6 +181,18 @@ def _add_swot_table(pdf: _ReportPDF, swot):
         right_color,
         right_bg,
     ) in row_pairs:
+        left_text = "\n".join(f"  {BULLET} {_sanitize(item)}" for item in left_items)
+        right_text = "\n".join(f"  {BULLET} {_sanitize(item)}" for item in right_items)
+
+        # Keep header and content of each row pair on the same page:
+        # measure the row height up front and break early if needed
+        pdf.set_font("Helvetica", "", 9)
+        left_lines = pdf.multi_cell(col_w, 5, left_text, dry_run=True, output="LINES")
+        right_lines = pdf.multi_cell(col_w, 5, right_text, dry_run=True, output="LINES")
+        row_height = 8 + max(len(left_lines), len(right_lines)) * 5
+        if pdf.will_page_break(row_height):
+            pdf.add_page()
+
         # Headers
         pdf.set_font("Helvetica", "B", 10)
         for label, color in [(left_label, left_color), (right_label, right_color)]:
@@ -184,9 +204,6 @@ def _add_swot_table(pdf: _ReportPDF, swot):
         # Content
         pdf.set_font("Helvetica", "", 9)
         pdf.set_text_color(*COLOR_BLACK)
-
-        left_text = "\n".join(f"  {BULLET} {_sanitize(item)}" for item in left_items)
-        right_text = "\n".join(f"  {BULLET} {_sanitize(item)}" for item in right_items)
 
         x_start = pdf.get_x()
         y_start = pdf.get_y()
