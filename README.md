@@ -120,7 +120,7 @@ The report is saved to `./output/market_research_<company>_<date>.docx`.
 ## Testing
 
 ```bash
-# Run the full test suite (50 tests, no API key needed)
+# Run the full test suite (81 tests, no API key needed)
 python -m pytest tests/ -v
 ```
 
