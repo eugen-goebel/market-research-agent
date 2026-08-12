@@ -4,7 +4,7 @@ version = "1.1.0"
 description = "Multi-agent market research system, from web search to professional DOCX report"
 requires-python = ">=3.10"
 dependencies = [
-    "anthropic>=0.120.2",
+    "anthropic>=0.121.0",
     "fpdf2>=2.8.7",
     "python-docx>=1.2.0",
     "python-dotenv>=1.2.2",
