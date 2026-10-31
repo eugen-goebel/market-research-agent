@@ -3,7 +3,7 @@
 > **Multi-agent AI system that generates professional market research reports (fully automated, from web search to formatted DOCX) in under 2 minutes.**
 
 ![CI](https://github.com/eugen-goebel/market-research-agent/actions/workflows/tests.yml/badge.svg)
-![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![Python](https://img.shields.io/badge/Python-3.11+-blue)
 ![Anthropic SDK](https://img.shields.io/badge/Anthropic_SDK-0.49+-cc785c)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
@@ -190,7 +190,7 @@ market-research-agent/
 
 ## Requirements
 
-- Python 3.10+
+- Python 3.11+
 - Anthropic API key ([get one free](https://console.anthropic.com/))
 - Internet connection (for live web search)
 

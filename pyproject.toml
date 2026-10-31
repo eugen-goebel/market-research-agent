@@ -2,7 +2,7 @@
 name = "market-research-agent"
 version = "1.1.0"
 description = "Multi-agent market research system, from web search to professional DOCX report"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "anthropic>=0.121.0",
     "fpdf2>=2.8.7",
